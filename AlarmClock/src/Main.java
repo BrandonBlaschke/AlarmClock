@@ -21,7 +21,7 @@ public class Main extends PApplet {
 	 */
 	public void settings() {
 		// Size of screen
-		size(800,400);
+		size(800, 480);
 	}
 	
 	/**
