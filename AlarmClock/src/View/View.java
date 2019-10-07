@@ -10,6 +10,7 @@ import Model.Alarm;
 import Model.ClockModel;
 import processing.core.PApplet;
 import processing.core.PFont;
+import static View.Constants.*;
 
 /** Displays the time and other information as well as buttons.
  * @author Brandon Blaschke
@@ -63,6 +64,16 @@ public class View {
 	private DateTimeFormatter alarmFormatter;
 	
 	/**
+	 * Formatter for the date
+	 */
+	private DateTimeFormatter dateFormatter;
+	
+	/**
+	 * Formatter for the week day name.
+	 */
+	private DateTimeFormatter weekDayFormatter;
+	
+	/**
 	 * List of alarms.
 	 */
 	private ArrayList<Alarm> alarms;
@@ -84,6 +95,8 @@ public class View {
 		timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss", Locale.US);
 		timeOfDayFormatter = DateTimeFormatter.ofPattern("a", Locale.US);
 		alarmFormatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.US);
+		dateFormatter = DateTimeFormatter.ofPattern("MMM / dd / yyyy", Locale.US);
+		weekDayFormatter = DateTimeFormatter.ofPattern("EEEE", Locale.US);
 	}
 	
 	/**
@@ -100,33 +113,47 @@ public class View {
 		
 		// Create the circle around the time.
 		parent.fill(0);
-		parent.stroke(128,0,128);
-		parent.strokeWeight(8);
+		parent.stroke(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
+		parent.strokeWeight(STROKE_WEIGHT);
 		
 		// -------------- Drawing Arc 
 		
 		// Mapping seconds to degrees and getting radians.
-		float degrees = map(1, 86400, -90, 270, seconds);
+		float degrees = map(1, TOTAL_SECONDS, -90, 270, seconds);
 		float arcSpread = parent.radians(degrees);
 		
-		parent.arc(550, 250, 370, 370, -parent.HALF_PI, arcSpread, parent.OPEN);
+		parent.arc(ARC_POS[0], ARC_POS[1], ARC_SIZE, ARC_SIZE, -parent.HALF_PI, arcSpread, parent.OPEN);
 		
 		parent.filter(parent.BLUR, 6);
-		parent.arc(550, 250, 370, 370, -parent.HALF_PI, arcSpread, parent.OPEN);
+		parent.arc(ARC_POS[0], ARC_POS[1], ARC_SIZE, ARC_SIZE, -parent.HALF_PI, arcSpread, parent.OPEN);
 		parent.filter(parent.BLUR, 0);
 		
-		// -------------- Draw text		
-		parent.textFont(font, 48);
+		// -------------- Draw time		
+		parent.textFont(font, 55);
 		parent.fill(255);
-		parent.text(String.valueOf(timeFormatter.format(time)), 450, 250);
-		parent.text(String.valueOf(timeOfDayFormatter.format(time)), 510, 350);
+		
+		parent.text(String.valueOf(timeFormatter.format(time)), TIME_POS[0], TIME_POS[1]);
+		parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
+		parent.text(String.valueOf(timeOfDayFormatter.format(time)), TOD_POS[0], TOD_POS[1]);
 		
 		// -------------- Draw Alarms
 		alarms = clockModel.getAlarms();
-		parent.textFont(font, 25);
+		parent.textFont(font, 35);
 		for(int i = 0; i < alarms.size(); i++) {
-			parent.text(alarmString(alarms.get(i)) , 65, 65*(i + 1));
+			if (alarms.get(i).isActive) {
+				parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
+				parent.circle(42, 62*(i + 1), 45);	
+			}
+			
+			parent.fill(255);
+			parent.text(alarms.get(i).number, 35, ALARM_POS[1]*(i + 1));
+			parent.text(alarmString(alarms.get(i)) , ALARM_POS[0], ALARM_POS[1]*(i + 1));
 		}
+		
+		// -------------- Draw Date
+		parent.textFont(font, 50);
+		parent.text(String.valueOf(weekDayFormatter.format(time)), WEEK_POS[0], WEEK_POS[1]);
+		parent.text(String.valueOf(dateFormatter.format(time)), DATE_POS[0], DATE_POS[1]);
 	}
 	
 	/**

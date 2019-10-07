@@ -61,4 +61,14 @@ public class Controller {
 		LocalTime newTime = LocalTime.of(hourTo24, Integer.valueOf(min), Integer.valueOf(second));
 		clockModel.setAlarm(alarmNum, newTime);
 	}
+	
+	/**
+	 * Sets the alarm to be active or not.
+	 * @param alarmNum Number of the alarm to change.
+	 * @param isActive True to activate alarm clock, False otherwise.
+	 * @throws Exception 
+	 */
+	public void setAlarm(int alarmNum, boolean isActive) throws Exception {
+		clockModel.setAlarm(alarmNum, isActive);
+	}
 }
