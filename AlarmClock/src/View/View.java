@@ -101,8 +101,9 @@ public class View {
 	
 	/**
 	 * Displays the clock screen on the canvas.
+	 * @throws Exception 
 	 */
-	public void display() {
+	public void display() throws Exception {
 		// TODO: Refactor into different functions.
 		parent.background(0);
 		
@@ -154,7 +155,24 @@ public class View {
 		parent.textFont(font, 50);
 		parent.text(String.valueOf(weekDayFormatter.format(time)), WEEK_POS[0], WEEK_POS[1]);
 		parent.textFont(font, 30);
-		parent.text(String.valueOf(dateFormatter.format(time)), DATE_POS[0], DATE_POS[1]);
+		parent.text(String.valueOf(dateFormatter.format(time)), DATE_POS[0], DATE_POS[1]); 
+		
+		// -------------- Checking inputs
+		checkAlarmToggle(alarms);
+	}
+	
+	/**
+	 * Checks if user pressed within a alarm button toggle and toggles that alarm.
+	 * @param alarms List of alarm clocks
+	 * @throws Exception If wrong alarm number is passed.
+	 */
+	private void checkAlarmToggle(ArrayList<Alarm> alarms) throws Exception {
+		// TODO: Make it for all alarm clocks and remove magic numbers. 
+		if (parent.mousePressed) {
+			double dist = Math.sqrt(Math.pow(94 - parent.mouseX, 2) + Math.pow(75 - parent.mouseY, 2));
+			if (dist < 45) 
+				controller.setAlarm(1, !alarms.get(0).isActive);
+		}
 	}
 	
 	/**

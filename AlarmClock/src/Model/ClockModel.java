@@ -131,6 +131,7 @@ public class ClockModel {
 		for(Alarm alarm : alarms) {
 			if (alarm.number == alarmNum) {
 				alarm.isActive = activate;
+				return;
 			}
 		}
 		throw new Exception("Alarm does not exist");

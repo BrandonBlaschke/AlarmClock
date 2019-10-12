@@ -39,7 +39,12 @@ public class Main extends PApplet {
 	public void draw() {
 		clear();
 		
-		view.display();
+		try {
+			view.display();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
