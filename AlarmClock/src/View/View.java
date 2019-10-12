@@ -95,7 +95,7 @@ public class View {
 		timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss", Locale.US);
 		timeOfDayFormatter = DateTimeFormatter.ofPattern("a", Locale.US);
 		alarmFormatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.US);
-		dateFormatter = DateTimeFormatter.ofPattern("MMM / dd / yyyy", Locale.US);
+		dateFormatter = DateTimeFormatter.ofPattern("MMM / dd / yy", Locale.US);
 		weekDayFormatter = DateTimeFormatter.ofPattern("EEEE", Locale.US);
 	}
 	

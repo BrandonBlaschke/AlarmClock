@@ -12,7 +12,7 @@ public final class Constants {
 	public static final int[] PRIMARY_COLOR = {170, 0, 212};
 	
 	// Stroke Weight
-	public static final int STROKE_WEIGHT = 8;
+	public static final int STROKE_WEIGHT = 10;
 	
 	// Total Seconds in a day
 	public static final int TOTAL_SECONDS = 86400;
@@ -21,7 +21,7 @@ public final class Constants {
 	public static final int[] ARC_POS = {405, 250};
 	
 	// Arc Size
-	public static final int ARC_SIZE = 370;
+	public static final int ARC_SIZE = 340;
 	
 	// Time Position
 	public static final int[] TIME_POS = {280, 250};
@@ -33,9 +33,9 @@ public final class Constants {
 	public static final int[] ALARM_POS = {23, 135};
 	
 	// Date position
-	public static final int[] DATE_POS = {550, 430};
+	public static final int[] DATE_POS = {595, 270};
 	
 	// Day of the week position
-	public static final int[] WEEK_POS = {600, 380};
+	public static final int[] WEEK_POS = {610, 220};
 
 }
