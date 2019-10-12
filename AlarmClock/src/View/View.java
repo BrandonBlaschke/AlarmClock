@@ -142,17 +142,18 @@ public class View {
 		for(int i = 0; i < alarms.size(); i++) {
 			if (alarms.get(i).isActive) {
 				parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
-				parent.circle(42, 62*(i + 1), 45);	
+				parent.circle(94, (ALARM_POS[1]*(i + 1) - 62), 45);	
 			}
 			
 			parent.fill(255);
-			parent.text(alarms.get(i).number, 35, ALARM_POS[1]*(i + 1));
+			parent.text(alarms.get(i).number, 83, (ALARM_POS[1]*(i + 1) - 50));
 			parent.text(alarmString(alarms.get(i)) , ALARM_POS[0], ALARM_POS[1]*(i + 1));
 		}
 		
 		// -------------- Draw Date
 		parent.textFont(font, 50);
 		parent.text(String.valueOf(weekDayFormatter.format(time)), WEEK_POS[0], WEEK_POS[1]);
+		parent.textFont(font, 30);
 		parent.text(String.valueOf(dateFormatter.format(time)), DATE_POS[0], DATE_POS[1]);
 	}
 	
