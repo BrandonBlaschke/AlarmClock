@@ -32,10 +32,19 @@ public final class Constants {
 	// Alarm position
 	public static final int[] ALARM_POS = {23, 135};
 	
+	// Alarm radius for circle
+	public static final int ALARM_RADIUS = 40;
+	
+	// Alarm circle offset
+	public static final int ALARM_OFFSET = 72;
+	
+	// Alarm circle x position
+	public static final int ALARM_X = 94;
+	
 	// Date position
 	public static final int[] DATE_POS = {595, 270};
 	
 	// Day of the week position
-	public static final int[] WEEK_POS = {610, 220};
+	public static final int[] WEEK_POS = {600, 220};
 
 }

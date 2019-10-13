@@ -77,6 +77,11 @@ public class View {
 	 * List of alarms.
 	 */
 	private ArrayList<Alarm> alarms;
+	
+	/**
+	 * If the main display should be shown.
+	 */
+	private boolean showMain; 
 
 	/**
 	 * Create a new View object.
@@ -88,6 +93,8 @@ public class View {
 		clockModel = theModel;
 		controller = theController;
 		parent = proccessingObj;
+		
+		showMain = true;
 		
 		// TODO: Change font 
 		font = parent.createFont("Arial", 11, true);
@@ -103,10 +110,22 @@ public class View {
 	 * Displays the clock screen on the canvas.
 	 * @throws Exception 
 	 */
-	public void display() throws Exception {
-		// TODO: Refactor into different functions.
+	public void display() {
+		// TODO: Refactor with something other than if statements maybe.
 		parent.background(0);
 		
+		if (showMain)
+			mainDisplay();
+		
+		if (!showMain)
+			alarmSettingsDisplay();
+	}
+	
+	
+	/**
+	 * Displays the main view for the clock.
+	 */
+	private void mainDisplay() {
 		// Get current time
 		time = clockModel.getTime();
 		seconds = timeToSeconds(String.valueOf(timeFormatter.format(time)),
@@ -143,22 +162,69 @@ public class View {
 		for(int i = 0; i < alarms.size(); i++) {
 			if (alarms.get(i).isActive) {
 				parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
-				parent.circle(94, (ALARM_POS[1]*(i + 1) - 62), 45);	
+				parent.circle(ALARM_X, (ALARM_POS[1]*(i + 1) - ALARM_OFFSET), ALARM_RADIUS);	
 			}
 			
 			parent.fill(255);
-			parent.text(alarms.get(i).number, 83, (ALARM_POS[1]*(i + 1) - 50));
+			parent.text(alarms.get(i).number, 83, (ALARM_POS[1]*(i + 1) - 60));
 			parent.text(alarmString(alarms.get(i)) , ALARM_POS[0], ALARM_POS[1]*(i + 1));
 		}
 		
+		// TODO: Remove later, for testing only 
+		parent.rect(0, 0, 100, 100);
+		
 		// -------------- Draw Date
-		parent.textFont(font, 50);
+		parent.textFont(font, 40);
 		parent.text(String.valueOf(weekDayFormatter.format(time)), WEEK_POS[0], WEEK_POS[1]);
 		parent.textFont(font, 30);
 		parent.text(String.valueOf(dateFormatter.format(time)), DATE_POS[0], DATE_POS[1]); 
 		
 		// -------------- Checking inputs
-		checkAlarmToggle(alarms);
+		try {
+			checkAlarmToggle(alarms);
+			checkAlarmSettingsPressed();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Displays the alarm settings for a particular alarm.
+	 */
+	private void alarmSettingsDisplay() {
+		parent.textFont(font, 40);
+		parent.text("Alarm settings", 400, 220);
+	}
+	
+	/**
+	 * Checks if an alarm was clicked to change its settings.
+	 */
+	private void checkAlarmSettingsPressed() {
+		if (parent.mousePressed && withinRectangle(parent.mouseX, parent.mouseY, 0, 0, 100, 100)) {
+			showMain = false;
+			System.out.println("CHECK");
+		}
+	}
+	
+	/**
+	 * Determines if a point is within a rectangle.
+	 * @param x1 Point x position.
+	 * @param y1 Point y position.
+	 * @param x2 Rectangle x position.
+	 * @param y2 Rectangle y position.
+	 * @param width Width of the rectangle.
+	 * @param height Height of the rectangle.
+	 * @return True if point is within rectangle, false otherwise.
+	 */
+	private boolean withinRectangle(float x1, float y1, float x2, float y2, float width, float height) {
+		
+		if (x1 < x2 || x1 > (x2 + width))
+			return false;
+		
+		if (y1 < y2 || y1 > (y2 + height))
+			return false;
+		
+		return true;
 	}
 	
 	/**
@@ -167,11 +233,12 @@ public class View {
 	 * @throws Exception If wrong alarm number is passed.
 	 */
 	private void checkAlarmToggle(ArrayList<Alarm> alarms) throws Exception {
-		// TODO: Make it for all alarm clocks and remove magic numbers. 
 		if (parent.mousePressed) {
-			double dist = Math.sqrt(Math.pow(94 - parent.mouseX, 2) + Math.pow(75 - parent.mouseY, 2));
-			if (dist < 45) 
-				controller.setAlarm(1, !alarms.get(0).isActive);
+			for (int i = 0; i < alarms.size(); i++) {
+				double dist = Math.sqrt(Math.pow(ALARM_X - parent.mouseX, 2) + Math.pow((ALARM_POS[1]*(i + 1) - ALARM_OFFSET) - parent.mouseY, 2));
+				if (dist < ALARM_RADIUS) 
+					controller.setAlarm(i+1, !alarms.get(i).isActive);
+			}
 		}
 	}
 	
