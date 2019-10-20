@@ -1,6 +1,7 @@
 package View;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -78,6 +79,11 @@ public class View {
 	 */
 	private ArrayList<Alarm> alarms;
 	
+	/** 
+	 * Current Alarm
+	 */
+	private int currentAlarm;
+	
 	/**
 	 * If the main display should be shown.
 	 */
@@ -93,6 +99,7 @@ public class View {
 		clockModel = theModel;
 		controller = theController;
 		parent = proccessingObj;
+		currentAlarm = 1;
 		
 		showMain = true;
 		
@@ -170,8 +177,7 @@ public class View {
 			parent.text(alarmString(alarms.get(i)) , ALARM_POS[0], ALARM_POS[1]*(i + 1));
 		}
 		
-		// TODO: Remove later, for testing only 
-		parent.rect(0, 0, 100, 100);
+		
 		
 		// -------------- Draw Date
 		parent.textFont(font, 40);
@@ -193,17 +199,42 @@ public class View {
 	 */
 	private void alarmSettingsDisplay() {
 		parent.textFont(font, 40);
-		parent.text("Alarm settings", 400, 220);
+		parent.text(String.format("Set Alarm %s", currentAlarm), 280, 50);
+		
+		for (Alarm alarm : alarms) {
+			if (alarm.number == currentAlarm) {
+				parent.textFont(font, 120);
+				parent.text(alarmString(alarm), 110, 290);
+			}
+		}
+		
+		// TODO: Remove later, for testing only 
+		parent.rect(0, 0, 100, 100);
+		if (parent.mousePressed && withinRectangle(parent.mouseX, parent.mouseY, 0, 0, 100, 100)) {
+			showMain = true;
+		}
 	}
 	
 	/**
 	 * Checks if an alarm was clicked to change its settings.
 	 */
 	private void checkAlarmSettingsPressed() {
-		if (parent.mousePressed && withinRectangle(parent.mouseX, parent.mouseY, 0, 0, 100, 100)) {
-			showMain = false;
-			System.out.println("CHECK");
-		}
+		if (parent.mousePressed)
+			if (withinRectangle(parent.mouseX, parent.mouseY, 35, 100, 140, 50)) {
+				showMain = false;
+				currentAlarm = 1;
+				System.out.println("CHECK" + " " + 1);
+
+			} else if (withinRectangle(parent.mouseX, parent.mouseY, 35, 230, 140, 50)) {
+				showMain = false;
+				currentAlarm = 2;
+				System.out.println("CHECK" + " " + 2);
+				
+			} else if (withinRectangle(parent.mouseX, parent.mouseY, 35, 370, 140, 50)) {
+				showMain = false;
+				currentAlarm = 3;
+				System.out.println("CHECK" + " " + 3);
+			}
 	}
 	
 	/**
@@ -268,7 +299,8 @@ public class View {
 			// Convert the hour, min, or second and add to totalTime.
 			switch(i) {
 				case 0:
-					totalTime += temp * 60 * 60;
+					if (temp != 12)
+						totalTime += temp * 60 * 60;
 					break;
 				case 1:
 					totalTime += temp * 60;
