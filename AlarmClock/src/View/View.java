@@ -207,12 +207,35 @@ public class View {
 				parent.text(alarmString(alarm), 110, 290);
 			}
 		}
+
+		// Triangle buttons
+		parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
+		for (int x : TRIANGLES_X) {
+			displayTriangle(x, TOP_TRIANGLE_Y, TRIANGLE_SIZE, false);
+			displayTriangle(x, BOTTOM_TRIANGLE_Y, TRIANGLE_SIZE, true);
+		}
+		parent.fill(255);
 		
 		// TODO: Remove later, for testing only 
 		parent.rect(0, 0, 100, 100);
 		if (parent.mousePressed && withinRectangle(parent.mouseX, parent.mouseY, 0, 0, 100, 100)) {
 			showMain = true;
 		}
+	}
+	
+	/**
+	 * Display a triangle on screen.
+	 * @param x: X position for triangle starting at the leftmost point
+	 * @param y: Y position for triangle starting at the leftmost point
+	 * @param size: Size of the triangle.
+	 * @param reverse: True to draw the triangle upside, false otherwise.
+	 */
+	private void displayTriangle(int x, int y, int size, boolean reverse) {
+		float verticalPoint = reverse ? y + size : y - size;
+		
+		parent.noStroke();
+		parent.triangle(x, y, x + size, y, ((x + x + size) / 2), verticalPoint);
+		parent.stroke(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
 	}
 	
 	/**

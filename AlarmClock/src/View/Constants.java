@@ -46,5 +46,17 @@ public final class Constants {
 	
 	// Day of the week position
 	public static final int[] WEEK_POS = {600, 220};
+	
+	// Triangle button positions for alarm settings
+	public static final int[] TRIANGLES_X = {160, 360, 550};
+	
+	// Top row of triangles y position.
+	public static final int TOP_TRIANGLE_Y = 180;
+	
+	// Bottom row of triangles y position.
+	public static final int BOTTOM_TRIANGLE_Y = 320;
+	
+	// Triangle size
+	public static final int TRIANGLE_SIZE = 50;
 
 }
