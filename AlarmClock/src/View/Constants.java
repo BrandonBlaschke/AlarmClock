@@ -30,16 +30,13 @@ public final class Constants {
 	public static final int[] TOD_POS = {360, 350};
 	
 	// Alarm position
-	public static final int[] ALARM_POS = {23, 135};
+	public static final int[] ALARM_POS = {60, 210, 360};
 	
 	// Alarm radius for circle
 	public static final int ALARM_RADIUS = 40;
 	
 	// Alarm circle offset
-	public static final int ALARM_OFFSET = 72;
-	
-	// Alarm circle x position
-	public static final int ALARM_X = 94;
+	public static final int ALARM_OFFSET = 55;
 	
 	// Date position
 	public static final int[] DATE_POS = {595, 270};

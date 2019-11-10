@@ -60,11 +60,6 @@ public class View {
 	private DateTimeFormatter timeOfDayFormatter;
 	
 	/**
-	 * Formatter for alarms
-	 */
-	private DateTimeFormatter alarmFormatter;
-	
-	/**
 	 * Formatter for the date
 	 */
 	private DateTimeFormatter dateFormatter;
@@ -79,10 +74,15 @@ public class View {
 	 */
 	private ArrayList<Alarm> alarms;
 	
-	/** 
-	 * Current Alarm
+	/**
+	 *  List of AlarmWidgets
 	 */
-	private int currentAlarm;
+	private ArrayList<AlarmWidget> alarmWidgets;
+	
+	/** 
+	 * Current AlarmWidget
+	 */
+	private AlarmWidget currentAlarmWidget;
 	
 	/**
 	 * If the main display should be shown.
@@ -99,8 +99,7 @@ public class View {
 		clockModel = theModel;
 		controller = theController;
 		parent = proccessingObj;
-		currentAlarm = 1;
-		
+		currentAlarmWidget = null;
 		showMain = true;
 		
 		// TODO: Change font 
@@ -108,9 +107,14 @@ public class View {
 		
 		timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss", Locale.US);
 		timeOfDayFormatter = DateTimeFormatter.ofPattern("a", Locale.US);
-		alarmFormatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.US);
 		dateFormatter = DateTimeFormatter.ofPattern("MMM / dd / yy", Locale.US);
 		weekDayFormatter = DateTimeFormatter.ofPattern("EEEE", Locale.US);
+		
+		alarms = clockModel.getAlarms();
+		alarmWidgets = new ArrayList<AlarmWidget>();
+		for (int i = 0; i < alarms.size(); i++) {
+			alarmWidgets.add(new AlarmWidget(proccessingObj, 80, ALARM_POS[i], alarms.get(i), theController));
+		}
 	}
 	
 	/**
@@ -164,20 +168,9 @@ public class View {
 		parent.text(String.valueOf(timeOfDayFormatter.format(time)), TOD_POS[0], TOD_POS[1]);
 		
 		// -------------- Draw Alarms
-		alarms = clockModel.getAlarms();
-		parent.textFont(font, 35);
-		for(int i = 0; i < alarms.size(); i++) {
-			if (alarms.get(i).isActive) {
-				parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
-				parent.circle(ALARM_X, (ALARM_POS[1]*(i + 1) - ALARM_OFFSET), ALARM_RADIUS);	
-			}
-			
-			parent.fill(255);
-			parent.text(alarms.get(i).number, 83, (ALARM_POS[1]*(i + 1) - 60));
-			parent.text(alarmString(alarms.get(i)) , ALARM_POS[0], ALARM_POS[1]*(i + 1));
+		for (AlarmWidget aw : alarmWidgets) {
+			aw.displayAlarmWidget(font);
 		}
-		
-		
 		
 		// -------------- Draw Date
 		parent.textFont(font, 40);
@@ -187,7 +180,6 @@ public class View {
 		
 		// -------------- Checking inputs
 		try {
-			checkAlarmToggle(alarms);
 			checkAlarmSettingsPressed();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -198,111 +190,19 @@ public class View {
 	 * Displays the alarm settings for a particular alarm.
 	 */
 	private void alarmSettingsDisplay() {
-		parent.textFont(font, 40);
-		parent.text(String.format("Set Alarm %s", currentAlarm), 280, 50);
-		
-		for (Alarm alarm : alarms) {
-			if (alarm.number == currentAlarm) {
-				parent.textFont(font, 120);
-				parent.text(alarmString(alarm), 110, 290);
-			}
-		}
-
-		// Triangle buttons
-		parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
-		for (int x : TRIANGLES_X) {
-			displayTriangle(x, TOP_TRIANGLE_Y, TRIANGLE_SIZE, false);
-			displayTriangle(x, BOTTOM_TRIANGLE_Y, TRIANGLE_SIZE, true);
-		}
-		parent.fill(255);
-		
-		// TODO: Remove later, for testing only 
-		parent.rect(0, 0, 100, 100);
-		if (parent.mousePressed && withinRectangle(parent.mouseX, parent.mouseY, 0, 0, 100, 100)) {
-			showMain = true;
-		}
-	}
-	
-	/**
-	 * Display a triangle on screen.
-	 * @param x: X position for triangle starting at the leftmost point
-	 * @param y: Y position for triangle starting at the leftmost point
-	 * @param size: Size of the triangle.
-	 * @param reverse: True to draw the triangle upside, false otherwise.
-	 */
-	private void displayTriangle(int x, int y, int size, boolean reverse) {
-		float verticalPoint = reverse ? y + size : y - size;
-		
-		parent.noStroke();
-		parent.triangle(x, y, x + size, y, ((x + x + size) / 2), verticalPoint);
-		parent.stroke(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
+		showMain = currentAlarmWidget.displayAlarmEdit(font);
 	}
 	
 	/**
 	 * Checks if an alarm was clicked to change its settings.
 	 */
 	private void checkAlarmSettingsPressed() {
-		if (parent.mousePressed)
-			if (withinRectangle(parent.mouseX, parent.mouseY, 35, 100, 140, 50)) {
+		for (AlarmWidget aw : alarmWidgets) {
+			if (aw.checkEditAlarmPressed()) {
 				showMain = false;
-				currentAlarm = 1;
-				System.out.println("CHECK" + " " + 1);
-
-			} else if (withinRectangle(parent.mouseX, parent.mouseY, 35, 230, 140, 50)) {
-				showMain = false;
-				currentAlarm = 2;
-				System.out.println("CHECK" + " " + 2);
-				
-			} else if (withinRectangle(parent.mouseX, parent.mouseY, 35, 370, 140, 50)) {
-				showMain = false;
-				currentAlarm = 3;
-				System.out.println("CHECK" + " " + 3);
-			}
-	}
-	
-	/**
-	 * Determines if a point is within a rectangle.
-	 * @param x1 Point x position.
-	 * @param y1 Point y position.
-	 * @param x2 Rectangle x position.
-	 * @param y2 Rectangle y position.
-	 * @param width Width of the rectangle.
-	 * @param height Height of the rectangle.
-	 * @return True if point is within rectangle, false otherwise.
-	 */
-	private boolean withinRectangle(float x1, float y1, float x2, float y2, float width, float height) {
-		
-		if (x1 < x2 || x1 > (x2 + width))
-			return false;
-		
-		if (y1 < y2 || y1 > (y2 + height))
-			return false;
-		
-		return true;
-	}
-	
-	/**
-	 * Checks if user pressed within a alarm button toggle and toggles that alarm.
-	 * @param alarms List of alarm clocks
-	 * @throws Exception If wrong alarm number is passed.
-	 */
-	private void checkAlarmToggle(ArrayList<Alarm> alarms) throws Exception {
-		if (parent.mousePressed) {
-			for (int i = 0; i < alarms.size(); i++) {
-				double dist = Math.sqrt(Math.pow(ALARM_X - parent.mouseX, 2) + Math.pow((ALARM_POS[1]*(i + 1) - ALARM_OFFSET) - parent.mouseY, 2));
-				if (dist < ALARM_RADIUS) 
-					controller.setAlarm(i+1, !alarms.get(i).isActive);
+				currentAlarmWidget = aw;
 			}
 		}
-	}
-	
-	/**
-	 * Formats the alarm into a string.
-	 * @param alarm Alarm to format.
-	 * @return Formatted alarm in a string.
-	 */
-	private String alarmString(Alarm alarm) {
-		return String.valueOf(alarmFormatter.format(alarm.time));
 	}
 	
 	/**
