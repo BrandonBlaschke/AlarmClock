@@ -116,9 +116,10 @@ public class ClockModel {
 		for(Alarm alarm : alarms) {
 			if (alarm.number == alarmNum) {
 				alarm.time = newTime;
+				return;
 			}
 		}
-		throw new Exception("Alarm does not exist");
+		throw new Exception("Alarm does not exist, Number: " + String.valueOf(alarmNum));
 	}
 	
 	/**
@@ -134,6 +135,6 @@ public class ClockModel {
 				return;
 			}
 		}
-		throw new Exception("Alarm does not exist");
+		throw new Exception("Alarm does not exist, Number: " + String.valueOf(alarmNum));
 	}
 }

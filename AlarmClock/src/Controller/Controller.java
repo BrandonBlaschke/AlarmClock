@@ -57,9 +57,32 @@ public class Controller {
 	 * @throws Exception
 	 */
 	public void setAlarm(int alarmNum, String hour, String min, String second, String timeOfDay) throws Exception {
-		int hourTo24 = timeOfDay == "AM" ? Integer.valueOf(hour) : Integer.valueOf(hour) + 12;
-		LocalTime newTime = LocalTime.of(hourTo24, Integer.valueOf(min), Integer.valueOf(second));
+		int hourInt = Integer.valueOf(hour);
+		int minInt = Integer.valueOf(min);
+		
+		if (hourInt > 12) {
+			hourInt = 1;
+		} else if (hourInt < 1) {
+			hourInt = 12;
+		}
+		
+		if (minInt > 60) {
+			minInt = 0;
+		} else if (minInt < 1) {
+			minInt = 60;
+		}
+		
+		int hourTo24 = timeOfDay == "AM" ? hourInt : hourInt + 12;
+		LocalTime newTime = LocalTime.of(hourTo24, minInt, Integer.valueOf(second));
 		clockModel.setAlarm(alarmNum, newTime);
+	}
+	
+	public void setAlarm(int alarmNum, LocalTime newTime) {
+		try {
+			clockModel.setAlarm(alarmNum, newTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -71,4 +94,5 @@ public class Controller {
 	public void setAlarm(int alarmNum, boolean isActive) throws Exception {
 		clockModel.setAlarm(alarmNum, isActive);
 	}
+	
 }
