@@ -1,8 +1,10 @@
+package Main;
 
 import Controller.Controller;
 import Model.ClockModel;
 import View.View;
 import processing.core.PApplet;
+import processing.event.MouseEvent;
 
 public class Main extends PApplet {
 	
@@ -11,9 +13,13 @@ public class Main extends PApplet {
 	public static Controller controller;
 	
 	public static View view;
+	
+	private static boolean mousePressed = false;
+	
+	private static boolean mouseReleased = false;
 
 	public static void main(String[] args) {	
-		PApplet.main("Main");
+		PApplet.main("Main.Main");
 	}
 	
 	/**
@@ -45,6 +51,31 @@ public class Main extends PApplet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void mousePressed() {
+		mousePressed = true;
+	}
+	
+	public void mouseReleased() {
+		mouseReleased = true;
+	}
+	
+	public void mouseMoved() {
+		mousePressed = false;
+		mouseReleased = false;
+	}
+	
+	/**
+	 * Check if mouse clicked or not.
+	 */
+	public boolean getMouseClicked() {
+		if (mousePressed && mouseReleased) {
+			mousePressed = false;
+			mouseReleased = false;
+			return true;
+		}
+		return false;
 	}
 
 }

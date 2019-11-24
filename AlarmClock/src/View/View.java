@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import Controller.Controller;
+import Main.Main;
 import Model.Alarm;
 import Model.ClockModel;
 import processing.core.PApplet;
@@ -95,7 +96,7 @@ public class View {
 	 * @param theController Controller to control model.
 	 * @param proccessingObj PApplet object that is being used to draw items.
 	 */
-	public View(ClockModel theModel, Controller theController, PApplet proccessingObj) {
+	public View(ClockModel theModel, Controller theController, Main proccessingObj) {
 		clockModel = theModel;
 		controller = theController;
 		parent = proccessingObj;

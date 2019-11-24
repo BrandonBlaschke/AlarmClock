@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import Controller.Controller;
+import Main.Main;
 import Model.Alarm;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -99,8 +100,8 @@ public class AlarmWidget {
 		parent.fill(PRIMARY_COLOR[0], PRIMARY_COLOR[1], PRIMARY_COLOR[2]);
 		for (int i = 0; i < TRIANGLES_X.length; i++) {
 			int x = TRIANGLES_X[i];
-			TriangleButton t = new TriangleButton(x, TOP_TRIANGLE_Y, TRIANGLE_SIZE, false, i, parent);
-			TriangleButton t2 = new TriangleButton(x, BOTTOM_TRIANGLE_Y, TRIANGLE_SIZE, true, i, parent);
+			TriangleButton t = new TriangleButton(x, TOP_TRIANGLE_Y, TRIANGLE_SIZE, false, i, (Main) parent);
+			TriangleButton t2 = new TriangleButton(x, BOTTOM_TRIANGLE_Y, TRIANGLE_SIZE, true, i, (Main) parent);
 			t.displayTriangle();
 			t2.displayTriangle();
 			
@@ -179,9 +180,9 @@ class TriangleButton {
 	// The third point on the triangle.
 	float verticalPoint;
 		
-	PApplet parent;
+	Main parent;
 	
-	public TriangleButton(int x, int y, int size, boolean reverse, int value, PApplet proccessingObj) {
+	public TriangleButton(int x, int y, int size, boolean reverse, int value, Main proccessingObj) {
 		this.x = x;
 		this.y = y;
 		this.size = size;
@@ -215,7 +216,7 @@ class TriangleButton {
 		boolean isIn = withinRectangle(parent.mouseX, parent.mouseY, x, newY, size, size);
 		int inc_dec = reverse ? -1 : 1;
 		
-		if (isIn && parent.mousePressed) {
+		if (isIn && parent.getMouseClicked()) {
 			switch(value) {
 			case 0:
 				controller.setAlarm(alarm.number, alarm.time.plusHours(inc_dec));	
