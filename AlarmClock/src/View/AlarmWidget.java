@@ -108,13 +108,15 @@ public class AlarmWidget {
 			t.change_value(alarm, controller);
 			t2.change_value(alarm, controller);
 		}
-		parent.fill(255);
 		
-		// TODO: Remove later, for testing only 
-		parent.rect(0, 0, 100, 100);
-		if (parent.mousePressed && withinRectangle(parent.mouseX, parent.mouseY, 0, 0, 100, 100)) {
+		// Back Arrow 
+		parent.rect(20, 19, 35, 2);
+		parent.triangle(15, 20, 20, 15, 20, 25);
+		if (parent.mousePressed && withinRectangle(parent.mouseX, parent.mouseY, 0, 0, 50, 50)) {
+			parent.fill(255);
 			return true;
 		}
+		parent.fill(255);
 		return false;
 	}
 	
