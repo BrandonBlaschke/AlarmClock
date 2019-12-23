@@ -55,5 +55,4 @@ public final class Constants {
 	
 	// Triangle size
 	public static final int TRIANGLE_SIZE = 50;
-
 }

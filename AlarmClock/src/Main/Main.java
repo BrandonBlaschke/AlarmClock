@@ -47,6 +47,7 @@ public class Main extends PApplet {
 		
 		try {
 			view.display();
+			clockModel.checkAlarm();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

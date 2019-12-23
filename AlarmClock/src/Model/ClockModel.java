@@ -10,6 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 /**
  * 
  * @author Brandon Blaschke
@@ -34,6 +37,12 @@ public class ClockModel {
 	
 	
 	/**
+	 * Play Audio for alarm.
+	 */
+	private AudioPlayer audioPlayer;
+	
+	
+	/**
 	 * Create a ClockModel.
 	 * @param numberOfAlarms The number of alarms to have.
 	 */
@@ -45,6 +54,12 @@ public class ClockModel {
 		}
 		dateFormatCmd = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 		timeFormatCmd = DateTimeFormatter.ofPattern("hh:mm:ss", Locale.US);
+		// Location of alarm soundfx file by GowlerMusic
+		try {
+			audioPlayer = new AudioPlayer("src/Model/alarm_sound.wav");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -136,5 +151,25 @@ public class ClockModel {
 			}
 		}
 		throw new Exception("Alarm does not exist, Number: " + String.valueOf(alarmNum));
+	}
+	
+	/**
+	 * Checks if the alarms match the time. If one of them does the alarm goes off.
+	 */
+	public void checkAlarm() {
+		for (Alarm alarm : alarms) {
+			String currentTime = String.valueOf(timeFormatCmd.format(getTime()));
+			String alarmTime = String.valueOf(timeFormatCmd.format(alarm.time));
+			if (alarmTime.equals(currentTime) && alarm.isActive) {
+				audioPlayer.play();
+			}
+		}
+	}
+	
+	/**
+	 * Stops the alarm.
+	 */
+	public void stopAlarm() {
+		audioPlayer.stop();
 	}
 }
