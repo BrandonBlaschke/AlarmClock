@@ -35,6 +35,11 @@ public class ClockModel {
 	 */
 	private DateTimeFormatter timeFormatCmd;
 	
+	/**
+	 * True if alarm is on, False if off.
+	 */
+	private boolean alarmOn;
+	
 	
 	/**
 	 * Play Audio for alarm.
@@ -60,6 +65,7 @@ public class ClockModel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		alarmOn = false;
 	}
 	
 	/**
@@ -162,6 +168,7 @@ public class ClockModel {
 			String alarmTime = String.valueOf(timeFormatCmd.format(alarm.time));
 			if (alarmTime.equals(currentTime) && alarm.isActive) {
 				audioPlayer.play();
+				alarmOn = true;
 			}
 		}
 	}
@@ -171,5 +178,14 @@ public class ClockModel {
 	 */
 	public void stopAlarm() {
 		audioPlayer.stop();
+		alarmOn = false;
+	}
+	
+	/**
+	 * Check if alarm is current on.
+	 * @return True if alarm is on, false if off.
+	 */
+	public boolean isAlarmOn() {
+		return alarmOn;
 	}
 }

@@ -31,7 +31,7 @@ public final class Constants {
 	
 	// Alarm position
 	public static final int[] ALARM_POS = {60, 210, 360};
-	
+
 	// Alarm radius for circle
 	public static final int ALARM_RADIUS = 40;
 	

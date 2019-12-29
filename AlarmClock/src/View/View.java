@@ -86,9 +86,15 @@ public class View {
 	private AlarmWidget currentAlarmWidget;
 	
 	/**
+	 * Alarm ticks
+	 */
+	int tick = 1;
+
+	
+	/**
 	 * If the main display should be shown.
 	 */
-	private boolean showMain; 
+	private Views display; 
 
 	/**
 	 * Create a new View object.
@@ -101,7 +107,7 @@ public class View {
 		controller = theController;
 		parent = proccessingObj;
 		currentAlarmWidget = null;
-		showMain = true;
+		display = Views.MAIN_DISPLAY;
 		
 		// TODO: Change font 
 		font = parent.createFont("Arial", 11, true);
@@ -123,14 +129,19 @@ public class View {
 	 * @throws Exception 
 	 */
 	public void display() {
-		// TODO: Refactor with something other than if statements maybe.
 		parent.background(0);
 		
-		if (showMain)
+		switch(display) {
+		case MAIN_DISPLAY:
 			mainDisplay();
-		
-		if (!showMain)
+			break;
+		case ALARM_SETTINGS_DISPLAY:
 			alarmSettingsDisplay();
+			break;
+		case SNOOZE_DISPLAY:
+			snoozeDisplay();
+			break;
+		}
 	}
 	
 	
@@ -171,6 +182,10 @@ public class View {
 		// -------------- Draw Alarms
 		for (AlarmWidget aw : alarmWidgets) {
 			aw.displayAlarmWidget(font);
+			
+		// -------------- Check if one of the alarms is going off
+		if (clockModel.isAlarmOn())
+			display = Views.SNOOZE_DISPLAY;
 		}
 		
 		// -------------- Draw Date
@@ -191,7 +206,9 @@ public class View {
 	 * Displays the alarm settings for a particular alarm.
 	 */
 	private void alarmSettingsDisplay() {
-		showMain = currentAlarmWidget.displayAlarmEdit(font);
+		if (currentAlarmWidget.displayAlarmEdit(font)) {
+			display = Views.MAIN_DISPLAY;
+		}
 	}
 	
 	/**
@@ -200,10 +217,50 @@ public class View {
 	private void checkAlarmSettingsPressed() {
 		for (AlarmWidget aw : alarmWidgets) {
 			if (aw.checkEditAlarmPressed()) {
-				showMain = false;
+				display = Views.ALARM_SETTINGS_DISPLAY;
 				currentAlarmWidget = aw;
 			}
 		}
+	}
+	
+	/**
+	 * Displays the alarm display when alarm goes off.
+	 */
+	private void snoozeDisplay() {
+		
+		// Blinking border
+		int tick_time = 22;
+		if (tick < tick_time) {
+			parent.strokeWeight(25);
+			parent.fill(0);
+			parent.stroke(250, 0, 5);
+			parent.rect(0, 0, 800, 480);
+			parent.strokeWeight(0);
+			parent.stroke(0);
+		} else if (tick > tick_time + 10) {
+			tick = 0;
+		}
+		tick += 1;
+		
+		// Snooze button
+		parent.textFont(font, 70);
+		parent.fill(250, 0, 5);
+		parent.rect(210, 50, 380, 100, 9);
+		parent.fill(255);
+		parent.text("SNOOZE", 250, 125);
+		
+		// Alarm off button
+		parent.textSize(65);
+		parent.fill(250, 0, 5);
+		parent.rect(210, 175, 380, 100, 9);
+		parent.fill(255);
+		parent.text("ALARM OFF", 215, 250);
+		
+		parent.textSize(60);
+		time = clockModel.getTime();
+		parent.text(String.valueOf(DateTimeFormatter.ofPattern("hh:mm", Locale.US).format(time)), 255, 400);
+		parent.text(String.valueOf(timeOfDayFormatter.format(time)), 460, 400);
+		
 	}
 	
 	/**
@@ -254,4 +311,9 @@ public class View {
 		return (float) (b1 + ((val - a1) * (b2-b1))/(a2-a1));
 	}
 	
+}
+
+// Represent the different views that can be displayed.
+enum Views {
+	MAIN_DISPLAY, ALARM_SETTINGS_DISPLAY, SNOOZE_DISPLAY
 }

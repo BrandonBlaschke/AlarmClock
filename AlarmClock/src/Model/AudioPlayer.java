@@ -53,14 +53,16 @@ public class AudioPlayer {
 	public void play() {
 		if (audioStatus != AudioStatus.PLAYING)
 			clip.start();
+			audioStatus = AudioStatus.PLAYING;
 	}
 	
 	/**
 	 * Pause the Audio.
 	 */
 	public void pause() {
-		if (audioStatus == AudioStatus.PLAYING)
+		if (audioStatus == AudioStatus.PLAYING && audioStatus != AudioStatus.STOPPED)
 			clip.stop();
+			audioStatus = AudioStatus.PAUSED;
 	}
 	
 	/**
@@ -70,6 +72,7 @@ public class AudioPlayer {
 		if (audioStatus != AudioStatus.STOPPED) {
 			clip.stop();
 			clip.close();	
+			audioStatus = AudioStatus.STOPPED;
 		}
 	}
 }
