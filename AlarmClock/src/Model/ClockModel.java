@@ -189,7 +189,7 @@ public class ClockModel {
 	}
 	
 	/**
-	 * Stops the alarm.
+	 * Stops the alarm and or snooze alarm.
 	 */
 	public void stopAlarm() {
 		audioPlayer.pause();
@@ -205,6 +205,9 @@ public class ClockModel {
 		return alarmOn;
 	}
 	
+	/**
+	 * Set the snooze time for the alarm, will snooze for 10mins.
+	 */
 	public void setSnooze() {
 		snoozeTime = getTime();
 		snoozeTime = snoozeTime.plusMinutes(10);
