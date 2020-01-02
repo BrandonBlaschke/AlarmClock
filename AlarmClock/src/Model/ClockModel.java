@@ -48,6 +48,17 @@ public class ClockModel {
 	
 	
 	/**
+	 * Time for snooze;
+	 */
+	private LocalDateTime snoozeTime;
+	
+	/**
+	 * True if snooze is active, False otherwise.
+	 */
+	private boolean snoozeActive;
+	
+	
+	/**
 	 * Create a ClockModel.
 	 * @param numberOfAlarms The number of alarms to have.
 	 */
@@ -66,6 +77,7 @@ public class ClockModel {
 			e.printStackTrace();
 		}
 		alarmOn = false;
+		snoozeActive = false;
 	}
 	
 	/**
@@ -166,7 +178,10 @@ public class ClockModel {
 		for (Alarm alarm : alarms) {
 			String currentTime = String.valueOf(timeFormatCmd.format(getTime()));
 			String alarmTime = String.valueOf(timeFormatCmd.format(alarm.time));
-			if (alarmTime.equals(currentTime) && alarm.isActive) {
+			
+			boolean isSnooze = snoozeActive && String.valueOf(timeFormatCmd.format(snoozeTime)).equals(currentTime);
+			
+			if ((alarmTime.equals(currentTime) && alarm.isActive) || isSnooze) {
 				audioPlayer.play();
 				alarmOn = true;
 			}
@@ -177,8 +192,9 @@ public class ClockModel {
 	 * Stops the alarm.
 	 */
 	public void stopAlarm() {
-		audioPlayer.stop();
+		audioPlayer.pause();
 		alarmOn = false;
+		snoozeActive = false;
 	}
 	
 	/**
@@ -187,5 +203,14 @@ public class ClockModel {
 	 */
 	public boolean isAlarmOn() {
 		return alarmOn;
+	}
+	
+	public void setSnooze() {
+		snoozeTime = getTime();
+		snoozeTime = snoozeTime.plusMinutes(10);
+		System.out.println(String.valueOf(timeFormatCmd.format(snoozeTime)));
+		snoozeActive = true;
+		audioPlayer.pause();
+		alarmOn = false;
 	}
 }

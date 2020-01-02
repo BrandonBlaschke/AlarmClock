@@ -249,6 +249,11 @@ public class View {
 		parent.fill(255);
 		parent.text("SNOOZE", 250, 125);
 		
+		if (withinRectangle(parent.mouseX, parent.mouseY, 210, 50, 380, 100)) {
+			clockModel.setSnooze();
+			display = Views.MAIN_DISPLAY;
+		}
+		
 		// Alarm off button
 		parent.textSize(65);
 		parent.fill(250, 0, 5);
@@ -260,6 +265,11 @@ public class View {
 		time = clockModel.getTime();
 		parent.text(String.valueOf(DateTimeFormatter.ofPattern("hh:mm", Locale.US).format(time)), 255, 400);
 		parent.text(String.valueOf(timeOfDayFormatter.format(time)), 460, 400);
+		
+		if (withinRectangle(parent.mouseX, parent.mouseY, 210, 175, 380, 100)) {
+			clockModel.stopAlarm();
+			display = Views.MAIN_DISPLAY;
+		}
 		
 	}
 	
@@ -309,6 +319,27 @@ public class View {
 	 */
 	private float map(double a1, double a2, double b1, double b2, double val) {
 		return (float) (b1 + ((val - a1) * (b2-b1))/(a2-a1));
+	}
+	
+	/**
+	 * Determines if a point is within a rectangle.
+	 * @param x1 Point x position.
+	 * @param y1 Point y position.
+	 * @param x2 Rectangle x position.
+	 * @param y2 Rectangle y position.
+	 * @param width Width of the rectangle.
+	 * @param height Height of the rectangle.
+	 * @return True if point is within rectangle, false otherwise.
+	 */
+	private boolean withinRectangle(float x1, float y1, float x2, float y2, float width, float height) {
+		
+		if (x1 < x2 || x1 > (x2 + width))
+			return false;
+		
+		if (y1 < y2 || y1 > (y2 + height))
+			return false;
+		
+		return true;
 	}
 	
 }

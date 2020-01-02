@@ -18,13 +18,13 @@ public final class Constants {
 	public static final int TOTAL_SECONDS = 86400;
 	
 	// Arc position
-	public static final int[] ARC_POS = {405, 250};
+	public static final int[] ARC_POS = {385, 250};
 	
 	// Arc Size
 	public static final int ARC_SIZE = 340;
 	
 	// Time Position
-	public static final int[] TIME_POS = {280, 250};
+	public static final int[] TIME_POS = {260, 250};
 	
 	// Time of day position
 	public static final int[] TOD_POS = {360, 350};
@@ -42,7 +42,7 @@ public final class Constants {
 	public static final int[] DATE_POS = {595, 270};
 	
 	// Day of the week position
-	public static final int[] WEEK_POS = {600, 220};
+	public static final int[] WEEK_POS = {565, 220};
 	
 	// Triangle button positions for alarm settings
 	public static final int[] TRIANGLES_X = {160, 360, 550};

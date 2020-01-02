@@ -52,7 +52,7 @@ public class AudioPlayer {
 	 */
 	public void play() {
 		if (audioStatus != AudioStatus.PLAYING)
-			clip.start();
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
 			audioStatus = AudioStatus.PLAYING;
 	}
 	
