@@ -211,7 +211,6 @@ public class ClockModel {
 	public void setSnooze() {
 		snoozeTime = getTime();
 		snoozeTime = snoozeTime.plusMinutes(10);
-		System.out.println(String.valueOf(timeFormatCmd.format(snoozeTime)));
 		snoozeActive = true;
 		audioPlayer.pause();
 		alarmOn = false;
