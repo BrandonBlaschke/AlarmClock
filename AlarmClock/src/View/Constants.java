@@ -27,7 +27,7 @@ public final class Constants {
 	public static final int[] TIME_POS = {260, 250};
 	
 	// Time of day position
-	public static final int[] TOD_POS = {360, 350};
+	public static final int[] TOD_POS = {345, 350};
 	
 	// Alarm position
 	public static final int[] ALARM_POS = {60, 210, 360};

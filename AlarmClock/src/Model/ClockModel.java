@@ -1,8 +1,13 @@
 package Model;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -64,20 +69,25 @@ public class ClockModel {
 	 */
 	public ClockModel(int numberOfAlarms) {
 		LocalTime deafultTime = LocalTime.parse("12:00"); 
+		
 		alarms = new ArrayList<Alarm>();
 		for(int i = 0; i < numberOfAlarms; i++) {
 			alarms.add(new Alarm(i+1, deafultTime));
 		}
+		
 		dateFormatCmd = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 		timeFormatCmd = DateTimeFormatter.ofPattern("hh:mm:ss", Locale.US);
+		
 		// Location of alarm soundfx file by GowlerMusic
 		try {
 			audioPlayer = new AudioPlayer("src/Model/alarm_sound.wav");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		alarmOn = false;
 		snoozeActive = false;
+		readAlarms();
 	}
 	
 	/**
@@ -149,10 +159,44 @@ public class ClockModel {
 		for(Alarm alarm : alarms) {
 			if (alarm.number == alarmNum) {
 				alarm.time = newTime;
+				saveAlarms();
 				return;
 			}
 		}
 		throw new Exception("Alarm does not exist, Number: " + String.valueOf(alarmNum));
+	}
+	
+	private void saveAlarms() {
+		try {
+			FileOutputStream fileOut = new FileOutputStream("./alarms.txt");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(this.alarms);
+			out.close();
+			fileOut.close();
+			System.out.println("Saved Filed");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void readAlarms() {
+		
+		try {
+			FileInputStream fileIn = new FileInputStream("./alarms.txt");
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			alarms = (ArrayList<Alarm>) in.readObject();
+			in.close();
+			fileIn.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

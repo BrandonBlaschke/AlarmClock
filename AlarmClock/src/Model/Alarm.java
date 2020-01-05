@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
 /**
@@ -7,8 +8,13 @@ import java.time.LocalTime;
  * @author Brandon Blaschke
  * Represents an alarm for an alarm clock.
  */
-public class Alarm {
-	
+public class Alarm implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Number of the alarm.
 	 */
